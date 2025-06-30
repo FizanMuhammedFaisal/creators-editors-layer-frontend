@@ -1,6 +1,7 @@
 import Header from '@/components/Header'
 import HeroSection from '@/components/HeroSection'
 import HowItWorks from '@/components/HowItWorks'
+import WhyItMatters from '@/components/WhyItMatters'
 import React from 'react'
 
 function page() {
@@ -9,8 +10,8 @@ function page() {
       <Header />
       <HeroSection />
       <HowItWorks />
-      {/* <WhyItMatters />
-      <ProductPreview />
+      <WhyItMatters />
+      {/* <ProductPreview />
       <SocialProof />
       <CTASection />
       <Footer /> */}

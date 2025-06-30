@@ -1,5 +1,6 @@
 import React from 'react'
 import { Button } from '@/components/ui/button'
+import Image from 'next/image'
 
 const Header = () => {
   return (
@@ -7,8 +8,14 @@ const Header = () => {
       <div className='container mx-auto px-4 py-4'>
         <div className='flex items-center justify-between'>
           <div className='flex items-center space-x-2'>
-            <div className='w-8 h-8 bg-primary-red rounded-lg flex items-center justify-center'>
-              <span className='text-white font-bold text-sm'>UT</span>
+            <div className='w-8 h-8  rounded-full flex items-center justify-center'>
+              <Image
+                alt='logo'
+                className='rounded-full'
+                height={55}
+                width={55}
+                src={'/logo.png'}
+              />
             </div>
             <span className='text-xl font-semibold text-gray-900'>
               Upload Thing
@@ -22,7 +29,7 @@ const Header = () => {
             >
               Sign In
             </Button>
-            <Button className='bg-primary-red hover:bg-red-600 text-white'>
+            <Button className='bg-primary-red hover:bg-primary-red-hover text-white'>
               Sign Up
             </Button>
           </div>

@@ -12,7 +12,13 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --color-primary-red: #f00;
+  --color-primary-red: #ff6b6b;
+  --color-primary-red-hover: #e85c5c;
+  --color-primary-red-accent: #fff0ef;
+  --color-neutral-red: #fef3f2;
+  --color-neutral-pink: #eed7e1;
+  --color-neutral-blue: #d6eaf8;
+  --color-neutral-Beige: #ffeacc;
 }
 
 body {
@@ -137,7 +143,7 @@ body {
 }
 
 .text-gradient {
-  background: linear-gradient(135deg, #ff0000, #ff6b6b);
+  background: linear-gradient(135deg, #ff6b6b, #e85c5c);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;

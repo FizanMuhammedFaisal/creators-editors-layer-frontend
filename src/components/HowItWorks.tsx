@@ -39,7 +39,7 @@ const HowItWorks = () => {
   ]
 
   return (
-    <section id='how-it-works' className='py-24 px-6 bg-gray-50'>
+    <section id='how-it-works' className='py-24 px-6 '>
       <div className='container mx-auto max-w-6xl'>
         <div className='text-center mb-16'>
           <h2 className='text-4xl font-bold text-gray-900 mb-4'>
@@ -54,14 +54,9 @@ const HowItWorks = () => {
           {steps.map((step, index) => (
             <div key={index} className='relative'>
               <div className='bg-white rounded-3xl p-8 shadow-sm border border-gray-100 hover-lift h-full'>
-                <div className='flex items-center mb-6'>
-                  <div className='w-16 h-16 bg-gradient-to-br from-primary-red to-red-600 rounded-2xl flex items-center justify-center mr-4'>
+                <div className='flex items-center justify-center mb-6'>
+                  <div className='w-16 h-16 bg-gradient-to-br from-primary-red to-primary-red-hover rounded-2xl flex items-center justify-center mr-4'>
                     <step.icon className='h-8 w-8 text-white' />
-                  </div>
-                  <div className='flex items-center justify-center w-8 h-8 bg-gray-100 rounded-full'>
-                    <span className='text-gray-600 font-semibold'>
-                      {index + 1}
-                    </span>
                   </div>
                 </div>
 
