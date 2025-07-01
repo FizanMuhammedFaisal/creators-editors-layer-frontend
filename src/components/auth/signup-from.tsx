@@ -1,18 +1,61 @@
-import { GalleryVerticalEnd } from 'lucide-react'
+'use client'
+import { GalleryVerticalEnd, Loader2Icon } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import Link from 'next/link'
-
+import { useAuthStore } from '@/stores/authStore'
+import { useState } from 'react'
+import { toast } from 'sonner'
+import { useRouter } from 'next/navigation'
 export function SignUpForm({
   className,
   ...props
 }: React.ComponentProps<'div'>) {
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [cpassword, setCpassword] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const navigate = useRouter()
+  const signup = useAuthStore(s => s.signup)
+  const hanldeSignup = async e => {
+    e.preventDefault()
+    setPassword(password.trim())
+    setCpassword(cpassword.trim())
+    setEmail(email.trim())
+    setLoading(true)
+    if (password !== cpassword) {
+      toast.error("Passwords Does't Match", {
+        position: 'bottom-center'
+      })
+      setLoading(false)
+      return
+    }
+
+    try {
+      const result = await signup({ email, password, name })
+
+      if (!result.success) return
+      if (result.needsConfirmation) {
+        navigate.push('/auth/confirm')
+      } else {
+        navigate.push('/dashboard')
+      }
+    } catch (err: any) {
+      console.error('Unexpected error:', err)
+
+      setError('Something went wrong. Please try again.')
+    } finally {
+      setLoading(false)
+    }
+  }
   return (
     <div className={cn('flex flex-col gap-6 rounde', className)} {...props}>
-      <form>
+      <form onSubmit={hanldeSignup}>
         <div className='flex flex-col gap-6'>
           <div className='flex flex-col items-center gap-2'>
             <a
@@ -34,11 +77,28 @@ export function SignUpForm({
           </div>
           <div className='flex flex-col gap-6'>
             <div className='grid gap-3'>
+              <Label htmlFor='name'>Name</Label>
+              <Input
+                id='name'
+                type='name'
+                placeholder='me'
+                value={name}
+                onChange={e => {
+                  setName(e.target.value)
+                }}
+                required
+              />
+            </div>
+            <div className='grid gap-3'>
               <Label htmlFor='email'>Email</Label>
               <Input
                 id='email'
                 type='email'
-                placeholder='m@example.com'
+                placeholder='me@example.com'
+                value={email}
+                onChange={e => {
+                  setEmail(e.target.value)
+                }}
                 required
               />
             </div>
@@ -46,19 +106,37 @@ export function SignUpForm({
               <div className='flex items-center'>
                 <Label htmlFor='password'>Password</Label>
               </div>
-              <Input id='password' type='password' required />
+              <Input
+                id='password'
+                type='password'
+                value={password}
+                onChange={e => {
+                  setPassword(e.target.value)
+                }}
+                required
+              />
             </div>
             <div className='grid gap-3'>
               <div className='flex items-center'>
                 <Label htmlFor='password'>Confirm</Label>
               </div>
-              <Input id='password' type='password' required />
+              <Input
+                id='password'
+                type='password'
+                value={cpassword}
+                onChange={e => {
+                  setCpassword(e.target.value)
+                }}
+                required
+              />
             </div>
             <Button
+              disabled={loading}
               type='submit'
               className='w-full bg-primary-red hover:bg-primary-red-hover'
             >
               Sign Up
+              {loading && <Loader2Icon className='animate-spin' />}
             </Button>
           </div>
           <div className='after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t'>

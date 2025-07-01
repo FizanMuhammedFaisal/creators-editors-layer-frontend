@@ -1,18 +1,47 @@
-import { GalleryVerticalEnd } from 'lucide-react'
+'use client'
+import { GalleryVerticalEnd, Loader2Icon } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import Link from 'next/link'
+import { useState } from 'react'
+import { toast } from 'sonner'
+import { useAuthStore } from '@/stores/authStore'
+import { useRouter } from 'next/navigation'
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<'div'>) {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const navigate = useRouter()
+
+  const login = useAuthStore(s => s.login)
+  const hanldeLogin = async e => {
+    e.preventDefault()
+    setLoading(true)
+
+    try {
+      await login({ email, password })
+      navigate.push('/dashboard')
+    } catch (err: any) {
+      console.error('Unexpected error:', err)
+      toast.error('Something went wrong. Please try again.', {
+        position: 'bottom-center'
+      })
+      setError('Something went wrong. Please try again.')
+    } finally {
+      setLoading(false)
+    }
+  }
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
-      <form>
+      <form onSubmit={hanldeLogin}>
         <div className='flex flex-col gap-6'>
           <div className='flex flex-col items-center gap-2'>
             <a
@@ -40,6 +69,8 @@ export function LoginForm({
                 type='email'
                 placeholder='m@example.com'
                 required
+                value={email}
+                onChange={e => setEmail(e.target.value)}
               />
             </div>
             <div className='grid gap-3'>
@@ -52,13 +83,21 @@ export function LoginForm({
                   Forgot your password?
                 </a>
               </div>
-              <Input id='password' type='password' required />
+              <Input
+                id='password'
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                type='password'
+                required
+              />
             </div>
             <Button
               type='submit'
               className='w-full bg-primary-red hover:bg-primary-red-hover'
+              disabled={loading}
             >
               Login
+              {loading && <Loader2Icon className='animate-spin' />}
             </Button>
           </div>
           <div className='after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t'>
