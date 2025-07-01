@@ -1,6 +1,7 @@
 import React from 'react'
 import { Button } from '@/components/ui/button'
-import Image from 'next/image'
+
+import Link from 'next/link'
 
 const Header = () => {
   return (
@@ -9,13 +10,7 @@ const Header = () => {
         <div className='flex items-center justify-between'>
           <div className='flex items-center space-x-2'>
             <div className='w-8 h-8  rounded-full flex items-center justify-center'>
-              <Image
-                alt='logo'
-                className='rounded-full'
-                height={55}
-                width={55}
-                src={'/logo.png'}
-              />
+              <span className='bg-primary-red h-6 w-6 rounded-full'></span>
             </div>
             <span className='text-xl font-semibold text-gray-900'>
               Upload Thing
@@ -25,11 +20,11 @@ const Header = () => {
           <div className='flex items-center space-x-6'>
             <Button
               variant='ghost'
-              className='text-gray-600 hover:text-gray-900'
+              className='text-gray-600 font-bold cursor-pointer hover:text-gray-900'
             >
-              Sign In
+              <Link href={'/login'}> Sign In</Link>
             </Button>
-            <Button className='bg-primary-red hover:bg-primary-red-hover text-white'>
+            <Button className='bg-primary-red hover:bg-primary-red-hover  cursor-pointer font-bold text-white'>
               Sign Up
             </Button>
           </div>

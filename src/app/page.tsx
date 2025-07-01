@@ -1,7 +1,7 @@
-import Header from '@/components/Header'
-import HeroSection from '@/components/HeroSection'
-import HowItWorks from '@/components/HowItWorks'
-import WhyItMatters from '@/components/WhyItMatters'
+import Header from '@/components/layout/Header'
+import HeroSection from '@/components/landing/HeroSection'
+import HowItWorks from '@/components/landing/HowItWorks'
+import WhyItMatters from '@/components/landing/WhyItMatters'
 import React from 'react'
 
 function page() {

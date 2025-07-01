@@ -12,9 +12,10 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --color-primary-red: #ff6b6b;
-  --color-primary-red-hover: #e85c5c;
+  --color-primary-red: #b31545;
+  --color-primary-red-hover: #d61953;
   --color-primary-red-accent: #fff0ef;
+  --color-primary-red-light: #f399b4;
   --color-neutral-red: #fef3f2;
   --color-neutral-pink: #eed7e1;
   --color-neutral-blue: #d6eaf8;
@@ -83,7 +84,7 @@ body {
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --ring: #f399b4;
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -93,9 +94,9 @@ body {
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);
   --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent: #fff0ef;
   --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-border: #f399b4e5;
   --sidebar-ring: oklch(0.708 0 0);
 }
 
@@ -143,8 +144,15 @@ body {
 }
 
 .text-gradient {
-  background: linear-gradient(135deg, #ff6b6b, #e85c5c);
+  background: linear-gradient(135deg, #b31545, #e51e5a);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+input:-webkit-autofill {
+  transition: background-color 9999s ease-in-out 0s;
+  background-color: transparent !important;
+  -webkit-box-shadow: 0 0 0px 1000px var(--color-primary-red-accent) inset !important;
+  -webkit-text-fill-color: #000 !important; /* preserve text color */
 }

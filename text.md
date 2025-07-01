@@ -5,7 +5,7 @@ Headline:
 
 "Hire Editors Without Giving Away Channel Access"
 
-Let Editors do there work without touching your channel
+Let Editors work without touching your channel
 
 Let editors upload, collaborate, and get approval — you stay in control. We publish directly to your YouTube channel.
 
