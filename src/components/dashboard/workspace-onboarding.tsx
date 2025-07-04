@@ -285,32 +285,9 @@ function WorkspaceExplanation({ onNext, onBack }) {
 
 function ChannelConnection({ onBack, onComplete }) {
   const [isConnecting, setIsConnecting] = useState(false)
-
-  const connectMutation = useMutation({
-    mutationFn: async () => {
-      const response = await api.get('/api/oauth/auth/youtube')
-      return response.data
-    },
-    onSuccess: data => {
-      console.log('Connected successfully:', data)
-    },
-    onError: error => {
-      console.error('Connection failed:', error)
-    }
-  })
   const handleConnect = () => {
-    window.location.href = 'http://localhost:3000/api/oauth/auth/youtube'
+    window.location.href = 'http://localhost:3000/api/auth/youtube'
   }
-  // const handleConnect = async () => {
-  //   setIsConnecting(true)
-  //   await connectMutation.mutateAsync()
-
-  //   try {
-  //   } catch (error) {
-  //     console.error('Connection failed:', error)
-  //     setIsConnecting(false)
-  //   }
-  // }
 
   return (
     <div className='max-w-2xl mx-auto'>

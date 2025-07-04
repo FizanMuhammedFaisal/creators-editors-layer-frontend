@@ -40,9 +40,7 @@ export function LoginForm({
       navigate.push('/dashboard')
     } catch (err: any) {
       console.error('Unexpected error:', err)
-      toast.error('Something went wrong. Please try again.', {
-        position: 'bottom-center'
-      })
+
       setError('Something went wrong. Please try again.')
     } finally {
       setLoading(false)

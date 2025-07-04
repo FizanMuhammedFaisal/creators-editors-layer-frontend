@@ -19,7 +19,6 @@ export default function AuthWrapper({
 
   if (isLoading) return <div>Loading</div>
   if (user) {
-    navigate.replace('/dashboard')
     return <div>Redirecting...</div>
   }
   return <>{children}</>
