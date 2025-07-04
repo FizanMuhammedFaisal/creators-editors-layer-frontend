@@ -14,7 +14,7 @@ function Page() {
   console.log('needsOnboarding:', needsOnboarding)
 
   const [showOnBoarding, setShowOnBoarding] = useState(needsOnboarding)
-  const [authStatus, setAuthStatus] = useState(null)
+  const [authStatus, setAuthStatus] = useState<null | string>(null)
 
   useEffect(() => {
     if (needsOnboarding) {

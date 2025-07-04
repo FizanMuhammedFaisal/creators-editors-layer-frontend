@@ -1,28 +1,18 @@
 'use client'
 import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import {
-  TrendingUp,
-  Users,
-  Activity,
-  ArrowRight,
-  Plus,
-  Building2
-} from 'lucide-react'
+import { TrendingUp, Users, Activity, ArrowRight } from 'lucide-react'
 import { useAuthStore } from '@/stores/authStore'
-import { useRouter } from 'next/navigation'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+
+import { useQuery } from '@tanstack/react-query'
 import { WorkspaceService } from '@/services/workspaceService'
-import { Workspace } from '@/types/workspace'
+
 import WorkspaceEmpy from '@/components/dashboard/workspace-empy'
 
 export default function Page() {
   const [currentTime, setCurrentTime] = useState(new Date())
 
-  const [workspaceName, setWorkspaceName] = useState('')
-  const { user, isLoading } = useAuthStore()
-  const router = useRouter()
-  const queryClient = useQueryClient()
+  const { user } = useAuthStore()
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000)
@@ -31,7 +21,7 @@ export default function Page() {
 
   // Query to fetch workspaces
   const {
-    data: workspaces,
+    data: workspaces = [],
     isLoading: workspacesLoading,
     error: workspacesError
   } = useQuery({
@@ -54,7 +44,8 @@ export default function Page() {
     { icon: Activity, value: '94.2%', label: 'Uptime' }
   ]
 
-  const hasWorkspaces = workspaces && workspaces.length > 0
+  // @ts-ignore
+  const hasWorkspaces = workspaces.length > 0
 
   return (
     <div className='flex flex-1 flex-col gap-6 p-6 pt-0'>
