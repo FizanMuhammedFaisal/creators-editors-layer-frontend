@@ -22,10 +22,10 @@ const Header = () => {
               variant='ghost'
               className='text-gray-600 font-bold cursor-pointer hover:text-gray-900'
             >
-              <Link href={'/login'}> Sign In</Link>
+              <Link href={'/auth/login'}> Sign In</Link>
             </Button>
             <Button className='bg-primary-red hover:bg-primary-red-hover  cursor-pointer font-bold text-white'>
-              Sign Up
+              <Link href={'/auth/signup'}> Sign Up</Link>
             </Button>
           </div>
         </div>

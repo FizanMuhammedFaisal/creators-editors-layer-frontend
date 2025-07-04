@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import { useAuthStore } from '@/stores/authStore'
 import { useRouter } from 'next/navigation'
@@ -21,7 +21,16 @@ export function LoginForm({
   const [error, setError] = useState('')
   const navigate = useRouter()
 
+  const { user, isLoading } = useAuthStore()
+
+  useEffect(() => {
+    if (!isLoading && user) {
+      navigate.push('/dashboard')
+    }
+  }, [isLoading, user])
+
   const login = useAuthStore(s => s.login)
+
   const hanldeLogin = async e => {
     e.preventDefault()
     setLoading(true)
@@ -56,7 +65,10 @@ export function LoginForm({
             <h1 className='text-xl font-bold'>Login to your Account</h1>
             <div className='text-center text-sm'>
               Don&apos;t have an account?{' '}
-              <Link href={'/signup'} className='underline underline-offset-4'>
+              <Link
+                href={'/auth/signup'}
+                className='underline underline-offset-4'
+              >
                 Sign up
               </Link>
             </div>

@@ -30,6 +30,15 @@ export const useAuthStore = create<AuthState>(set => ({
       data: { session }
     } = await supabase.auth.getSession()
     set({ user: session?.user ?? null, isLoading: false })
+    supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'TOKEN_REFRESHED' || event === 'SIGNED_IN') {
+        set({ user: session?.user ?? null })
+      }
+
+      if (event === 'SIGNED_OUT') {
+        set({ user: null })
+      }
+    })
   },
   setUser: (user: User | null) => set({ user }),
   login: async ({ email, password }) => {

@@ -42,14 +42,14 @@ export function NavMain({
       <SidebarMenu>
         {items.map(item => {
           const isActive = item.url === pathname
-          const classnamebutton = isActive ? 'hover:bg-transparent' : ''
+          const classnamebutton = isActive ? 'hover:bg-transparent  ' : ''
           return (
             <div key={item.title}>
               {item.items ? (
                 <Collapsible
                   asChild
                   defaultOpen={item.isActive}
-                  className='group/collapsible'
+                  className='group/collapsible  '
                 >
                   <SidebarMenuItem className='relative'>
                     {isActive && (

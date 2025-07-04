@@ -39,12 +39,12 @@ const data = {
     {
       name: 'Mr Beast',
       logo: GalleryVerticalEnd,
-      plan: 'Enterprise'
+      plan: 'Youtube'
     },
     {
       name: 'MKBHD',
       logo: AudioWaveform,
-      plan: 'Startup'
+      plan: 'Youtube'
     },
     {
       name: 'Call Me Shazzam',
@@ -162,7 +162,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible='icon' {...props}>
       <SidebarHeader>
-        <OrganisationSwitcher teams={data.organisations} />
+        <OrganisationSwitcher organisations={data.organisations} />
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />

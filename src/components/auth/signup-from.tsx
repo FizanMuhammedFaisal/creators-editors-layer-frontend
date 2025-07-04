@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import Link from 'next/link'
 import { useAuthStore } from '@/stores/authStore'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
 export function SignUpForm({
@@ -21,7 +21,16 @@ export function SignUpForm({
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const navigate = useRouter()
+
+  const { user, isLoading } = useAuthStore()
+
+  useEffect(() => {
+    if (!isLoading && user) {
+      navigate.push('/dashboard')
+    }
+  }, [isLoading, user])
   const signup = useAuthStore(s => s.signup)
+
   const hanldeSignup = async e => {
     e.preventDefault()
     setPassword(password.trim())
@@ -70,7 +79,10 @@ export function SignUpForm({
             <h1 className='text-xl font-bold'>Sign Up Form</h1>
             <div className='text-center text-sm'>
               Already have an account?{' '}
-              <Link href={'/login'} className='underline underline-offset-4'>
+              <Link
+                href={'/auth/login'}
+                className='underline underline-offset-4'
+              >
                 log in
               </Link>
             </div>
