@@ -1,4 +1,5 @@
 'use client'
+
 import { useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import api from '@/lib/api'
@@ -10,25 +11,41 @@ export default function AuthCallbackPage() {
   useEffect(() => {
     const handleCallback = async () => {
       const code = searchParams.get('code')
-      console.log(code)
+      const error = searchParams.get('error')
+
+      if (error) {
+        console.error('OAuth error:', error)
+        router.push('/dashboard/org-add?auth=error')
+        return
+      }
 
       if (!code) {
-        console.error('No auth code found in URL')
+        console.error('No authorization code found')
+        router.push('/dashboard/org-add?auth=error')
         return
       }
 
       try {
-        const res = await api.get('/api/auth/oauth2callback', {
-          params: { code }
-        })
-        console.log(res)
-        if (res.status === 200) {
-          router.push('/dashboard/org-add?auth=success')
+        // Add withCredentials to include cookies
+        const response = await api.get(
+          `/api/auth/oauth2callback?code=${encodeURIComponent(code)}`,
+          {
+            withCredentials: true
+          }
+        )
+
+        if (response.status === 200) {
+          const redirectUrl = response.data
+          if (redirectUrl) {
+            window.location.href = redirectUrl
+          } else {
+            router.push('/dashboard/org-add?auth=success')
+          }
         } else {
-          router.push('/dashboard/org-add?auth=error')
+          throw new Error(`Unexpected status: ${response.status}`)
         }
-      } catch (err) {
-        console.error('Failed to send code to backend:', err)
+      } catch (error) {
+        console.error('OAuth callback error:', error)
         router.push('/dashboard/org-add?auth=error')
       }
     }
@@ -36,5 +53,12 @@ export default function AuthCallbackPage() {
     handleCallback()
   }, [searchParams, router])
 
-  return <p className='text-center mt-20'>Setting you up...</p>
+  return (
+    <div className='flex items-center justify-center min-h-screen'>
+      <div className='text-center'>
+        <div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto mb-4'></div>
+        <p>Completing YouTube authorization...</p>
+      </div>
+    </div>
+  )
 }

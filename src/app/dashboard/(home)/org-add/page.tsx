@@ -3,7 +3,7 @@ import { WorkspaceOnboarding } from '@/components/dashboard/workspace-onboarding
 import { useWorkspaceOnboarding } from '@/hooks/useWorkspaceOnboarding'
 import React, { useEffect, useState } from 'react'
 import { motion } from 'motion/react'
-import { ArrowRight, Shield, CheckCircle } from 'lucide-react'
+import { ArrowRight, Shield } from 'lucide-react'
 import QuickChannelConnect from '@/components/dashboard/workspace-exixting-onboarding'
 import WorkspaceCreate from '@/components/dashboard/workspace-create'
 
@@ -85,7 +85,6 @@ function Page() {
     )
   }
 
-  // First-time user - show full onboarding
   if (needsOnboarding) {
     return (
       <div className='fixed inset-0 z-50 bg-white overflow-y-auto'>

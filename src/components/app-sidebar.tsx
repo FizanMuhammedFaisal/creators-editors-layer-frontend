@@ -1,9 +1,9 @@
 'use client'
 
 import * as React from 'react'
+import { useQuery } from '@tanstack/react-query'
 import {
   AudioWaveform,
-  BookOpen,
   Bot,
   Command,
   Frame,
@@ -12,8 +12,9 @@ import {
   Map,
   PieChart,
   Settings2,
-  SquareTerminal,
-  TicketCheck
+  TicketCheck,
+  Loader2,
+  Plus
 } from 'lucide-react'
 
 import { NavMain } from '@/components/nav-main'
@@ -27,93 +28,75 @@ import {
   SidebarHeader,
   SidebarRail
 } from '@/components/ui/sidebar'
+import { Button } from '@/components/ui/button'
 
-// This is sample data.
-const data = {
-  user: {
-    name: 'shadcn',
-    email: 'm@example.com',
-    avatar: '/avatars/shadcn.jpg'
-  },
-  organisations: [
-    {
-      name: 'Mr Beast',
-      logo: GalleryVerticalEnd,
-      plan: 'Youtube'
-    },
-    {
-      name: 'MKBHD',
-      logo: AudioWaveform,
-      plan: 'Youtube'
-    },
-    {
-      name: 'Call Me Shazzam',
-      logo: Command,
-      plan: 'Free'
+import api from '@/lib/api'
+import { useWorkspaceStore } from '@/stores/workspaceStore'
+import { Workspace } from '@/types/workspace'
+
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const {
+    workspaces,
+    currentWorkspaceId,
+    setWorkspaces,
+    setCurrentWorkspaceId,
+    setCurrentWorkspace
+  } = useWorkspaceStore()
+
+  const { data: workspacesData, isLoading: isLoadingWorkspaces } = useQuery({
+    queryKey: ['workspaces'],
+    queryFn: async () => {
+      const response = await api.get('/api/workspaces')
+      return response.data
     }
-  ],
-  navMain: [
+  })
+
+  React.useEffect(() => {
+    if (workspacesData) {
+      setWorkspaces(workspacesData)
+      if (!currentWorkspaceId && workspacesData.length > 0) {
+        setCurrentWorkspaceId(workspacesData[0].id)
+      }
+    }
+  }, [workspacesData])
+
+  // Fetch current user data
+  const { data: userData } = useQuery({
+    queryKey: ['user-me'],
+    queryFn: async () => {
+      const response = await api.get('/api/auth/me')
+      return response.data
+    }
+  })
+
+  // Transform workspaces for OrganisationSwitcher
+  const transformedWorkspaces =
+    workspaces?.map(workspace => ({
+      name: workspace.name,
+      logo: GalleryVerticalEnd,
+      plan: 'Workspace',
+      id: workspace.id
+    })) || []
+
+  // Navigation items
+  const navMain = [
     {
       title: 'Home',
       url: '/dashboard',
       icon: Home,
       isActive: true
-      // items: [
-      //   {
-      //     title: 'History',
-      //     url: '#'
-      //   },
-      //   {
-      //     title: 'Starred',
-      //     url: '#'
-      //   },
-      //   {
-      //     title: 'Settings',
-      //     url: '#'
-      //   }
-      // ]
     },
     {
       title: 'Editors',
       url: '/dashboard/editors',
       icon: Bot
-      // items: [
-      //   {
-      //     title: 'Genesis',
-      //     url: '#'
-      //   },
-      //   {
-      //     title: 'Explorer',
-      //     url: '#'
-      //   },
-      //   {
-      //     title: 'Quantum',
-      //     url: '#'
-      //   }
-      // ]
     },
     {
-      title: 'Requests',
-      url: '/dashboard/requests',
+      title: 'Submissions',
+      url: currentWorkspaceId
+        ? `/dashboard/submissions`
+        : '/dashboard/submissions',
       icon: TicketCheck
-      // items: [
-      //   {
-      //     title: 'Introduction',
-      //     url: '#'
-      //   },
-      //   {
-      //     title: 'Get Started',
-      //     url: '#'
-      //   },
-      //   {
-      //     title: 'Tutorials',
-      //     url: '#'
-      //   },
-      //   {
-      //     title: 'Changelog',
-      //     url: '#'
-      //   }
-      // ]
     },
     {
       title: 'Settings',
@@ -138,38 +121,110 @@ const data = {
         }
       ]
     }
-  ],
-  projects: [
-    {
-      name: 'Design Engineering',
-      url: '#',
-      icon: Frame
-    },
-    {
-      name: 'Sales & Marketing',
-      url: '#',
-      icon: PieChart
-    },
-    {
-      name: 'Travel',
-      url: '#',
-      icon: Map
-    }
   ]
-}
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const handleWorkspaceChange = (workspaceId: string) => {
+    setCurrentWorkspaceId(workspaceId)
+    const selectedWorkspace = workspaces.find(w => w.id === workspaceId)
+    setCurrentWorkspace(selectedWorkspace || null)
+  }
+
+  const handleCreateWorkspace = () => {
+    window.location.href = '/workspace/create'
+  }
+
+  // Loading state
+  if (isLoadingWorkspaces) {
+    return (
+      <Sidebar collapsible='icon' {...props}>
+        <SidebarHeader>
+          <div className='flex items-center justify-center p-4'>
+            <Loader2 className='h-6 w-6 animate-spin text-gray-500' />
+          </div>
+        </SidebarHeader>
+        <SidebarContent>
+          <div className='flex items-center justify-center p-4'>
+            <span className='text-sm text-gray-500'>Loading workspaces...</span>
+          </div>
+        </SidebarContent>
+        <SidebarFooter>
+          <div className='flex items-center justify-center p-4'>
+            <div className='h-8 w-8 bg-gray-200 rounded-full animate-pulse' />
+          </div>
+        </SidebarFooter>
+        <SidebarRail />
+      </Sidebar>
+    )
+  }
+  console.log(workspaces)
+  // No workspaces state
+  if (!workspaces || workspaces.length === 0) {
+    return (
+      <Sidebar collapsible='icon' {...props}>
+        <SidebarHeader>
+          <div className='flex items-center justify-center p-4'>
+            <GalleryVerticalEnd className='h-6 w-6 text-gray-400' />
+          </div>
+        </SidebarHeader>
+        <SidebarContent>
+          <div className='flex flex-col items-center justify-center p-4 text-center space-y-4'>
+            <div className='space-y-2'>
+              <h3 className='text-sm font-medium text-gray-900'>
+                No workspaces
+              </h3>
+              <p className='text-xs text-gray-500'>
+                Create your first workspace to get started
+              </p>
+            </div>
+            <Button
+              size='sm'
+              onClick={handleCreateWorkspace}
+              className='w-full'
+            >
+              <Plus className='h-4 w-4 mr-2' />
+              Create Workspace
+            </Button>
+          </div>
+        </SidebarContent>
+        <SidebarFooter>
+          {userData && (
+            <NavUser
+              user={{
+                name: userData.name || 'User',
+                email: userData.email || '',
+                avatar: userData.avatar || '/avatars/default.jpg'
+              }}
+            />
+          )}
+        </SidebarFooter>
+        <SidebarRail />
+      </Sidebar>
+    )
+  }
+
   return (
     <Sidebar collapsible='icon' {...props}>
       <SidebarHeader>
-        <OrganisationSwitcher organisations={data.organisations} />
+        <OrganisationSwitcher
+          organisations={transformedWorkspaces}
+          currentOrganisationId={currentWorkspaceId}
+          onOrganisationChange={handleWorkspaceChange}
+        />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        <NavMain items={navMain} />
         {/* <NavProjects projects={data.projects} /> */}
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        {userData && (
+          <NavUser
+            user={{
+              name: userData.name || 'User',
+              email: userData.email || '',
+              avatar: userData.avatar || '/avatars/default.jpg'
+            }}
+          />
+        )}
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

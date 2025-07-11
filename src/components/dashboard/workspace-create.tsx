@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { motion } from 'motion/react'
 import {
   ArrowRight,
@@ -18,7 +18,6 @@ function WorkspaceCreationForm() {
   const [workspaceName, setWorkspaceName] = useState('')
   const [isCreating, setIsCreating] = useState(false)
 
-  // Fetch user's YouTube info
   const { data: youtubeData, isLoading: isLoadingYoutube } = useQuery({
     queryKey: ['youtube-me'],
     queryFn: async () => {
@@ -26,11 +25,23 @@ function WorkspaceCreationForm() {
       return response.data
     }
   })
+  interface WorkspaceData {
+    name: string
+    youtubeId?: string
+    youtubeName?: string
+  }
+  // Auto-populate workspace name when user data is loaded
+  useEffect(() => {
+    console.log(youtubeData)
+    if (youtubeData?.channel[0].channel_name && !workspaceName) {
+      setWorkspaceName(youtubeData.channel[0].channel_name)
+    }
+  }, [youtubeData?.channel, workspaceName])
 
   // Create workspace mutation
   const createWorkspaceMutation = useMutation({
-    mutationFn: async workspaceData => {
-      const response = await api.post('/api/workspace/create', workspaceData)
+    mutationFn: async (workspaceData: WorkspaceData) => {
+      const response = await api.post('/api/workspaces', workspaceData)
       return response.data
     },
     onSuccess: data => {
@@ -61,7 +72,7 @@ function WorkspaceCreationForm() {
       <div className='fixed inset-0 z-50 bg-white flex items-center justify-center'>
         <div className='text-center'>
           <div className='w-8 h-8 border-2 border-red-500 border-t-transparent rounded-full animate-spin mx-auto mb-4' />
-          <p className='text-gray-600'>Loading your YouTube channel...</p>
+          <p className='text-gray-600'>Loading your information...</p>
         </div>
       </div>
     )
